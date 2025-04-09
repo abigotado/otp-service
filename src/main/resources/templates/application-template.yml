@@ -1,0 +1,33 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/otp_service
+    username: your_db_user
+    password: your_db_password
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  mail:
+    host: smtp.example.com
+    port: 587
+    username: your_email@example.com
+    password: your_email_password
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+
+email:
+  from: your_email@example.com
+
+telegram:
+  token: YOUR_TELEGRAM_BOT_TOKEN
+  chat-id: YOUR_TELEGRAM_CHAT_ID
+
+jwt:
+  secret: YOUR_BASE64_ENCODED_SECRET
+  expiration: 86400000
