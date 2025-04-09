@@ -1,0 +1,9 @@
+CREATE TABLE otp_codes (
+    id UUID PRIMARY KEY,
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    operation_id UUID,
+    code VARCHAR(20) NOT NULL,
+    status VARCHAR(10) NOT NULL,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    expires_at TIMESTAMP WITHOUT TIME ZONE NOT NULL
+);
