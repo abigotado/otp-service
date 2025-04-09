@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class OtpConfigRequest {
-    private int codeLength;
-    private int ttlSeconds;
+    private Integer codeLength;
+    private Integer ttlSeconds;
 }

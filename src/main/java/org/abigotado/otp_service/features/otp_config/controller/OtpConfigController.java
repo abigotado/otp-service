@@ -19,9 +19,8 @@ public class OtpConfigController {
         return ResponseEntity.ok(service.getCurrentConfig());
     }
 
-    @PutMapping
-    public ResponseEntity<OtpConfig> updateConfig(@RequestBody OtpConfigRequest request) {
-        service.updateConfig(request);
-        return ResponseEntity.ok(service.getCurrentConfig());
+    @PatchMapping
+    public ResponseEntity<OtpConfig> patchConfig(@RequestBody OtpConfigRequest request) {
+        return ResponseEntity.ok(service.updateConfig(request));
     }
 }

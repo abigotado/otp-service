@@ -24,13 +24,17 @@ public class OtpConfigService {
                 .orElseThrow(() -> new IllegalStateException("OTP config not initialized"));
     }
 
-    public void updateConfig(OtpConfigRequest request) {
+    public OtpConfig updateConfig(OtpConfigRequest request) {
         List<OtpConfig> configs = repository.findAll();
         OtpConfig config = configs.isEmpty() ? new OtpConfig() : configs.getFirst();
 
-        config.setCodeLength(request.getCodeLength());
-        config.setTtlSeconds(request.getTtlSeconds());
+        if (request.getCodeLength() != null) {
+            config.setCodeLength(request.getCodeLength());
+        }
+        if (request.getTtlSeconds() != null) {
+            config.setTtlSeconds(request.getTtlSeconds());
+        }
 
-        repository.save(config);
+        return repository.save(config);
     }
 }
