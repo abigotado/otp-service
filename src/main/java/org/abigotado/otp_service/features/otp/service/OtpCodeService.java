@@ -13,8 +13,11 @@ import org.abigotado.otp_service.features.otp.model.OtpCodeStatus;
 import org.abigotado.otp_service.features.otp.repository.OtpCodeRepository;
 import org.abigotado.otp_service.features.otp_config.model.OtpConfig;
 import org.abigotado.otp_service.features.otp_config.service.OtpConfigService;
+import org.springframework.http.HttpStatus;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.security.SecureRandom;
 import java.time.Instant;
@@ -70,5 +73,25 @@ public class OtpCodeService {
             sb.append(random.nextInt(10));
         }
         return sb.toString();
+    }
+
+    @Transactional
+    public void validateOtp(UUID userId, UUID operationId, String code) {
+        OtpCode otp = repository
+                .findByUserIdAndOperationIdAndCode(userId, operationId, code)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid code or operation"));
+
+        if (otp.getStatus() != OtpCodeStatus.ACTIVE) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "OTP code is not active");
+        }
+
+        if (otp.getExpiresAt().isBefore(Instant.now())) {
+            otp.setStatus(OtpCodeStatus.EXPIRED);
+            repository.save(otp);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "OTP code is expired");
+        }
+
+        otp.setStatus(OtpCodeStatus.USED);
+        repository.save(otp);
     }
 }
