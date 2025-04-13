@@ -90,6 +90,10 @@ db.migration/    # Flyway миграции базы данных
    ```bash
    ./gradlew bootRun
    ```
+6. Логирование:
+   - Все действия сервисов и контроллеров логируются через AOP (`LoggingAspect`)
+   - Ошибки и исключения логируются глобально (`GlobalExceptionHandler`)
+   - Доступы и ошибки авторизации обрабатываются через `CustomAccessDeniedHandler` и `CustomAuthenticationEntryPoint`
 
 ## Документация API
 
