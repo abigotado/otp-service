@@ -31,3 +31,10 @@ telegram:
 jwt:
   secret: YOUR_BASE64_ENCODED_SECRET
   expiration: 86400000
+smpp:
+  host: localhost
+  port: 2775
+  system-id: smppclient1
+  password: password
+  system-type: OTP
+  source-addr: OTPService
