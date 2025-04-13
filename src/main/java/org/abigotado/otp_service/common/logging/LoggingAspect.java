@@ -4,9 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.abigotado.otp_service.features.otp.dto.OtpCodeRequest;
+import org.abigotado.otp_service.features.otp.dto.OtpCodeResponse;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Aspect
@@ -15,6 +19,24 @@ public class LoggingAspect {
 
     @Pointcut("within(@org.springframework.web.bind.annotation.RestController *)")
     public void restControllerMethods() {}
+
+    @Before("restControllerMethods() && args(request,..)")
+    public void logOtpGeneration(JoinPoint joinPoint, Optional<OtpCodeRequest> request) {
+        MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+        String operationId = request.map(OtpCodeRequest::operationId)
+                                  .map(UUID::toString)
+                                  .orElse("none");
+        
+        log.info("🔐 OTP Generation requested for operation: {}", operationId);
+    }
+
+    @AfterReturning(value = "restControllerMethods()", returning = "result")
+    public void logOtpGenerated(JoinPoint joinPoint, OtpCodeResponse result) {
+        MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+        
+        log.info("🔑 OTP Generated - ID: {}, Expires at: {}, Status: {}", 
+                 result.id(), result.expiresAt(), result.status());
+    }
 
     @Before("restControllerMethods()")
     public void logBefore(JoinPoint joinPoint) {
@@ -45,6 +67,7 @@ public class LoggingAspect {
                   methodSignature.getName(),
                   ex.getMessage(), ex);
     }
+
     @Pointcut("within(@org.springframework.stereotype.Service *)")
     public void serviceMethods() {}
 
