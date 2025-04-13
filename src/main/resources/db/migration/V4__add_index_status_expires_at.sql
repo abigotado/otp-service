@@ -1,0 +1,1 @@
+CREATE INDEX IF NOT EXISTS idx_status_expires_at ON otp_codes (status, expires_at);
