@@ -11,4 +11,5 @@ import java.util.UUID;
 public interface OtpCodeRepository extends JpaRepository<OtpCode, UUID> {
     List<OtpCode> findByUserId(UUID userId);
     List<OtpCode> findAllByStatusAndExpiresAtBefore(OtpCodeStatus status, Instant timestamp);
+    void deleteAllByUserId(UUID userId);
 }
