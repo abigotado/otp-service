@@ -23,10 +23,15 @@ public class OtpCodeController {
 
     @PostMapping("/generate")
     public ResponseEntity<OtpCodeResponse> generate(
-            @RequestBody(required = false) Optional<OtpCodeRequest> request,
-            @AuthenticationPrincipal User user
-    ) {
-        var response = otpService.generateCode(user.getId(), request.map(OtpCodeRequest::operationId).orElse(null));
+            @RequestBody(required = false) Optional<OtpCodeRequest> request, @AuthenticationPrincipal User user
+    )
+    {
+        var response = otpService.generateCode(
+                user.getId(),
+                request.map(OtpCodeRequest::operationId).orElse(null),
+                request.map(OtpCodeRequest::channel).orElse(null),
+                request.map(OtpCodeRequest::recipient).orElse(null)
+        );
         return ResponseEntity.ok(response);
     }
 }

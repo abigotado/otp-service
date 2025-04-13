@@ -9,19 +9,16 @@ import org.smpp.TCPIPConnection;
 import org.smpp.pdu.BindResponse;
 import org.smpp.pdu.BindTransmitter;
 import org.smpp.pdu.SubmitSM;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Slf4j
-@Component("smsDeliveryChannel")
+@Component
 @RequiredArgsConstructor
 public class SmsOtpSender implements DeliveryChannel {
-
-    @Qualifier("smsSenderProperties")
     private final SmsSenderProperties smsProps;
 
     @Override
-    public void send(String destination, String message) {
+    public void send(String code, String recipient) {
         try {
             TCPIPConnection connection = new TCPIPConnection(smsProps.getHost(), smsProps.getPort());
             Session session = new Session(connection);
@@ -40,17 +37,17 @@ public class SmsOtpSender implements DeliveryChannel {
 
             SubmitSM submitSM = new SubmitSM();
             submitSM.setSourceAddr(smsProps.getSourceAddr());
-            submitSM.setDestAddr(destination);
-            submitSM.setShortMessage(message);
+            submitSM.setDestAddr(recipient);
+            submitSM.setShortMessage(code);
 
             session.submit(submitSM);
-            log.info("SMPP: OTP message successfully sent to {}", destination);
+            log.info("SMPP: OTP message successfully sent to {}", recipient);
 
             session.unbind();
             session.close();
 
         } catch (Exception e) {
-            log.error("SMPP: Error sending OTP to {}: {}", destination, e.getMessage(), e);
+            log.error("SMPP: Error sending OTP to {}: {}", recipient, e.getMessage(), e);
         }
     }
 }

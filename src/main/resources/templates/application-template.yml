@@ -18,15 +18,17 @@ spring:
     username: your_email@example.com
     password: your_email_password
     properties:
-      mail.smtp.auth: true
-      mail.smtp.starttls.enable: true
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 email:
   from: your_email@example.com
 
 telegram:
   token: YOUR_TELEGRAM_BOT_TOKEN
-  chat-id: YOUR_TELEGRAM_CHAT_ID
 
 jwt:
   secret: YOUR_BASE64_ENCODED_SECRET
