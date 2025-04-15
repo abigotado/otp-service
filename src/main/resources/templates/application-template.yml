@@ -33,6 +33,7 @@ telegram:
 jwt:
   secret: YOUR_BASE64_ENCODED_SECRET
   expiration: 86400000
+
 smpp:
   host: localhost
   port: 2775
@@ -40,3 +41,11 @@ smpp:
   password: password
   system-type: OTP
   source-addr: OTPService
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    tagsSorter: alpha
